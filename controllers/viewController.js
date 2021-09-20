@@ -15,7 +15,7 @@ exports.getOverview = catchAsync(async (req, res, next) => {
     .status(200)
     .set(
       'Content-Security-Policy',
-      "default-src 'self';script-src * 'unsafe-inline';font-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';img-src *;connect-src *"
+      "default-src 'self';frame-src *;script-src * 'unsafe-inline';font-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';img-src *;connect-src *"
     )
     .render('overview', {
       title: 'All tours',
@@ -36,7 +36,7 @@ exports.getTour = catchAsync(async (req, res, next) => {
     .status(200)
     .set(
       'Content-Security-Policy',
-      "default-src 'self' https://*.mapbox.com https://js.stripe.com/v3/; base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;frame-ancestors 'self';img-src * data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com https://js.stripe.com/v3/ 'self' blob: ;script-src-attr 'none';frame-src *;style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;connect-src *"
+      "default-src 'self' https://*.mapbox.com https://js.stripe.com/v3/;frame-src *; base-uri 'self';block-all-mixed-content;font-src 'self' https: data:;img-src * data:;object-src 'none';script-src https://cdnjs.cloudflare.com https://api.mapbox.com https://js.stripe.com/v3/ 'self' blob: ;script-src-attr 'none';;style-src 'self' https: 'unsafe-inline';upgrade-insecure-requests;connect-src *"
     )
     .render('tour', {
       title: tour.name,
@@ -48,7 +48,7 @@ exports.getLoginForm = (req, res, next) => {
     .status(200)
     .set(
       'Content-Security-Policy',
-      "default-src 'self';script-src *;font-src *;style-src 'self' https: 'unsafe-inline' 'unsafe-hashes';connect-src *"
+      "default-src 'self';script-src *;font-src *;style-src 'self' https: 'unsafe-inline' 'unsafe-hashes';frame-src *;connect-src *"
     )
     .render('loginForm', {
       title: 'Log In'
@@ -70,7 +70,7 @@ exports.getMe = (req, res, next) => {
     .status(200)
     .set(
       'Content-Security-Policy',
-      "default-src 'self';script-src * 'unsafe-inline';font-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';img-src *;connect-src *"
+      "default-src 'self';script-src * 'unsafe-inline';font-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';frame-src *;img-src *;connect-src *"
     )
     .render('myAccount', {
       title: 'My Account'
@@ -93,7 +93,7 @@ exports.updateUserData = async (req, res, next) => {
     .status(200)
     .set(
       'Content-Security-Policy',
-      "default-src 'self';script-src * 'unsafe-inline';font-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';img-src *;connect-src *"
+      "default-src 'self';script-src * 'unsafe-inline';frame-src *;font-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';img-src *;connect-src *"
     )
     .render('myAccount', {
       title: 'My Account',
@@ -107,7 +107,11 @@ exports.getMyBookings = async (req, res, next) => {
 
   const tours = await Tour.find({ _id: { $in: tourIDs } });
 
-  res.status(200).render('overview', {
+  res.status(200).set(
+      'Content-Security-Policy',
+      "default-src 'self';script-src * 'unsafe-inline';font-src *;frame-src *;style-src 'self' fonts.googleapis.com 'unsafe-inline' 'unsafe-hashes';img-src *;connect-src *"
+    )
+    .render('overview', {
     title: 'My Booking',
     tours
   });

@@ -4,6 +4,7 @@ const path = require('path');
 const morgan = require('morgan');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
+const compression=require('compression');
 const mongoSanitize = require('express-mongo-sanitize');
 const hpp = require('hpp');
 const xss = require('xss-clean');
@@ -46,6 +47,9 @@ app.use(helmet());
 
 //xss attacks prevention
 app.use(xss());
+
+//compressing the responses (text format)
+app.use(compression());
 
 //using the morgan middleware
 if (process.env.NODE_ENV === 'development') {
@@ -96,8 +100,6 @@ app.use('/api/v1/bookings', bookingsRouter);
 app.all('*', (req, res, next) => {
   const err = new AppError(`Can't find ${req.originalUrl} on this server`, 404);
 
-  //You can also trace the error stack basically from where the error originated
-  console.log(err.stack);
 
   //whenever you pass an argument in next then automatically our global error middleware will be called
   next(err);
